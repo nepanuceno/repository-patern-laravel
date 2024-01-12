@@ -21,34 +21,14 @@ class UserController extends Controller
      */
     public function index()
     {
-        // return $this->list();
         return view('User.list');
     }
 
     public function list(Request $request)
     {
-        $strSearch = $request->search['value'];
-
-        //Add number page param in request
-        $request->merge(['page' => ($request->start / $request->length)+1]);
-
         try {
-            if($request->length > 0) {
-                $users = $this->userService->listPaginate($request->length, $strSearch);
-                $recordsTotal = $users->total();
-            } else {
-                $users = $this->userService->listAll($strSearch);
-                $recordsTotal = $users->count();
-            }
-
-            $arrayResult = [
-                "draw" => $request->draw,
-                "recordsTotal" => $recordsTotal,
-                "recordsFiltered" => $recordsTotal,
-                "data" => $users->all(),
-            ];
-
-            return new JsonResponse($arrayResult, 201);
+            $users = $this->userService->getUsers($request);
+            return new JsonResponse($users, 201);
         } catch (\Throwable $th) {
             return new JsonResponse(['error' => $th->getMessage()], 201);
         }

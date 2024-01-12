@@ -10,7 +10,7 @@ class UserService
         $this->repository->setCollectionName('user');
     }
 
-    public function listAll($strSearch)
+    private function listAll($strSearch)
     {
         try {
             return $this->repository->list($strSearch);
@@ -19,7 +19,7 @@ class UserService
         }
     }
 
-    public function listPaginate($length, $strSearch)
+    private function listPaginate($length, $strSearch)
     {
         try {
             return $this->repository->listPaginate($length, $strSearch);
@@ -31,5 +31,29 @@ class UserService
     public function showUser($id)
     {
         return $this->repository->show($id);
+    }
+
+
+    public function getUsers($request)
+    {
+        $strSearch = $request->search['value'];
+
+        //Add number page param in request
+        $request->merge(['page' => ($request->start / $request->length)+1]);
+
+        if($request->length > 0) {
+            $users = $this->listPaginate($request->length, $strSearch);
+            $recordsTotal = $users->total();
+        } else {
+            $users = $this->listAll($strSearch);
+            $recordsTotal = $users->count();
+        }
+
+        return [
+            "draw" => $request->draw,
+            "recordsTotal" => $recordsTotal,
+            "recordsFiltered" => $recordsTotal,
+            "data" => $users->all(),
+        ];
     }
 }

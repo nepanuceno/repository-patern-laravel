@@ -27,8 +27,43 @@
             </div>
         </div>
     </div>
+    <form action="" method="POST">
+        <input type="hidden" name="_method" value="DELETE" />
+        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+        <input type="submit" value="Delete">
+    </form>
+
     <script>
+
+        function factoryButton(icon, color, icon_color, route, id, label='', fa_icon, size='fa-1g')
+        {
+            var a =`<a class="text-${color}-700
+            border border-${color}-700
+            hover:bg-${color}-700
+            hover:text-white
+            focus:ring-4
+            focus:outline-none
+            focus:ring-${color}-300
+            font-medium
+            rounded-lg
+            p-2.5
+            text-center
+            inline-flex
+            items-center
+            me-2
+            dark:border-${color}-500
+            dark:text-${color}-500
+            dark:hover:text-white
+            dark:focus:ring-${color}-800
+            dark:hover:bg-${color}-500"
+            href="${route}"><i class="fa fa-1g ${icon}" aria-hidden="true"></i>${label}</a>`;
+            console.log(a);
+            return a;
+        }
+
         $(document).ready(function(){
+            // var editButtom = factoryButton('fa-pencil-square-o', 'green', 'green', '{{ route('user.edit', 1) }}');
+            // var deleteButton = factoryButton('fa-ban','red', 'red', '{{ route('user.destroy', 1) }}');
             var table = new DataTable('#users', {
                 dom: 'fB<"pt-4"l>trpli',
                 pagingType: 'full_numbers',
@@ -54,7 +89,7 @@
                     { data:'name' },
                     { data:'email' },
                     {
-                        defaultContent: '<a class="text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500" href="{{ route('user.edit', 1) }}"><i class="fa fa-2x fa-pencil-square" aria-hidden="true"></i></a><a class="text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:focus:ring-red-800 dark:hover:bg-red-500" href="{{ route('user.destroy', 1) }}"><i class="fa fa-1g fa-ban" aria-hidden="true"></i></a>'
+                        defaultContent: factoryButton('fa-pencil-square-o', 'green', 'green', '{{ route('user.edit', 1) }}') + factoryButton('fa-ban','red', 'red', '{{ route('user.destroy', 1) }}', {data:'id'}),
                     },
                 ],
                 buttons: [
