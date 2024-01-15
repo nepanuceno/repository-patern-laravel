@@ -27,17 +27,16 @@
             </div>
         </div>
     </div>
-    <form action="" method="POST">
+    <form action="" method="POST" id='form_delete'>
         <input type="hidden" name="_method" value="DELETE" />
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <input type="submit" value="Delete">
     </form>
 
     <script>
-
-        function factoryButton(icon, color, icon_color, route, id, label='', fa_icon, size='fa-1g')
+        function factoryButton(id, icon, color, rota='#', label='', click='')
         {
-            var a =`<a class="text-${color}-700
+            var url_button =`<a class="text-${color}-700
             border border-${color}-700
             hover:bg-${color}-700
             hover:text-white
@@ -56,9 +55,11 @@
             dark:hover:text-white
             dark:focus:ring-${color}-800
             dark:hover:bg-${color}-500"
-            href="${route}"><i class="fa fa-1g ${icon}" aria-hidden="true"></i>${label}</a>`;
-            console.log(a);
-            return a;
+            href="${rota}"
+            <i class="fa fa-1g ${icon}" aria-hidden="true"></i>${label}</a>`;
+            console.log(url_button);
+
+            return url_button;
         }
 
         $(document).ready(function(){
@@ -89,8 +90,13 @@
                     { data:'name' },
                     { data:'email' },
                     {
-                        defaultContent: factoryButton('fa-pencil-square-o', 'green', 'green', '{{ route('user.edit', 1) }}') + factoryButton('fa-ban','red', 'red', '{{ route('user.destroy', 1) }}', {data:'id'}),
-                    },
+                        data: "id", "render": function (id) {
+                            return factoryButton(id, 'fa-pencil-square-o', 'green',`/user/${id}/edit`) + factoryButton(id, 'fa-ban', 'red','#');
+                        }
+                    }
+                    // {
+                    //     defaultContent: factoryButton({data}),// + factoryButton('fa-ban','red', 'red'),
+                    // },
                 ],
                 buttons: [
                     {
