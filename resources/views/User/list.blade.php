@@ -30,41 +30,55 @@
     <form action="" method="POST" id='form_delete'>
         <input type="hidden" name="_method" value="DELETE" />
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-        <input type="submit" value="Delete">
     </form>
-
     <script>
-        function factoryButton(id, icon, color, rota='#', label='', click='')
-        {
-            var url_button =`<a class="text-${color}-700
-            border border-${color}-700
-            hover:bg-${color}-700
-            hover:text-white
-            focus:ring-4
-            focus:outline-none
-            focus:ring-${color}-300
-            font-medium
-            rounded-lg
-            p-2.5
-            text-center
-            inline-flex
-            items-center
-            me-2
-            dark:border-${color}-500
-            dark:text-${color}-500
-            dark:hover:text-white
-            dark:focus:ring-${color}-800
-            dark:hover:bg-${color}-500"
-            href="${rota}"
-            <i class="fa fa-1g ${icon}" aria-hidden="true"></i>${label}</a>`;
-            console.log(url_button);
+        function distroy(id) {
+            swal({
+                    title: "Tem certeza?",
+                    text: "Deseja realmente desativar este usuário?",
+                    icon: "warning",
+                    dangerMode: true,
+                    buttons: {
+                        cancel: {
+                            text: "Cancelar",
+                            value: null,
+                            visible: true,
+                            className: "",
+                            closeModal: true,
+                        },
+                        confirm: {
+                            text: "Confirmar",
+                            value: true,
+                            visible: true,
+                            className: "",
+                            closeModal: true
+                        }
+                    },
+                })
+            .then(willDelete => {
+                if (willDelete) {
+                    var form = document.querySelector('#form_delete');
+                    form.action=`/user/${id}`;
+                    form.submit();
+                    console.log(form);
+                }
+            });
 
-            return url_button;
         }
 
         $(document).ready(function(){
-            // var editButtom = factoryButton('fa-pencil-square-o', 'green', 'green', '{{ route('user.edit', 1) }}');
-            // var deleteButton = factoryButton('fa-ban','red', 'red', '{{ route('user.destroy', 1) }}');
+
+            function factoryButton(id, icon, color, rota='#', label='')
+            {
+                if (rota=='#') {
+                    var url_button = `<a onclick="distroy(${id})" class="text-${color}-700 border border-${color}-700 hover:bg-${color}-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-${color}-300 font-medium rounded-lg p-2.5 text-center inline-flex items-center me-2 dark:border-${color}-500 dark:text-${color}-500 dark:hover:text-white dark:focus:ring-${color}-800 dark:hover:bg-${color}-500" href="${rota}"><i class="fa fa-1g ${icon}" aria-hidden="true"></i>${label}</a>`;
+                } else {
+                    var url_button = `<a class="text-${color}-700 border border-${color}-700 hover:bg-${color}-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-${color}-300 font-medium rounded-lg p-2.5 text-center inline-flex items-center me-2 dark:border-${color}-500 dark:text-${color}-500 dark:hover:text-white dark:focus:ring-${color}-800 dark:hover:bg-${color}-500" href="${rota}"><i class="fa fa-1g ${icon}" aria-hidden="true"></i>${label}</a>`;
+                }
+
+                return url_button;
+            }
+
             var table = new DataTable('#users', {
                 dom: 'fB<"pt-4"l>trpli',
                 pagingType: 'full_numbers',
@@ -94,9 +108,6 @@
                             return factoryButton(id, 'fa-pencil-square-o', 'green',`/user/${id}/edit`) + factoryButton(id, 'fa-ban', 'red','#');
                         }
                     }
-                    // {
-                    //     defaultContent: factoryButton({data}),// + factoryButton('fa-ban','red', 'red'),
-                    // },
                 ],
                 buttons: [
                     {
@@ -127,7 +138,6 @@
                     },
                 ],
             });
-
         });
     </script>
 
